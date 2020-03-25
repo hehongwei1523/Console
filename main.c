@@ -122,7 +122,7 @@ void sharpe_change()
 	memcpy(sharpe, figure[sharpe_sum[r] + space], 16 * sizeof(sharpe[0][0]));
 }
 
-int main(void)
+int main8(void)
 {
 	timeSetEvent(700, 1, (LPTIMECALLBACK)timer_handle, (DWORD)1, TIME_PERIODIC);//¶¨Ê±Æ÷ - 1000ms
 	r_rand();

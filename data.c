@@ -17,9 +17,9 @@ unsigned char data[] =
 };
 
 
-void main7(void)
+void main(void)
 {
-	int i = 0, j = 0, k = 0, l = 0;
+	int i = 0, j = 0, k = 0;
 	unsigned char old = data[0];
 	unsigned char result[512] = { 0 };
 
@@ -33,11 +33,10 @@ void main7(void)
 				if (data[j] == old) //统计该数据后10个数的值
 					k++;
 			}
-			if (k > 5) //当后10个数据大于5个为原值，则判断该数据为杂波
+			if (k > 6) //当后10个数据大于5个为原值，则判断该数据为杂波
 			{
 				data[i] = old;
 				k = 0;
-				l = 1;
 			}
 			else
 			{
@@ -46,7 +45,6 @@ void main7(void)
 		}
 		printf("%d, ", data[i]);
 		//if (i % 20 == 0) printf("\n");
-		//if (l) {l = 0; printf("\n");}
 	}
 }
 
