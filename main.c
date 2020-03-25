@@ -1,120 +1,181 @@
+#include "main.h"
 
-#include<stdio.h>
+int X = 0, Y = 0;
+char c = 0;
+unsigned char sharpe[4][4];
 
-unsigned char background[10][10] =
+void sharpe_show(int x, int y)
 {
-	{0,0,0,0,0,0,0,0,0,0},
-	{1,1,1,0,0,0,0,0,0,0},
-	{1,0,0,0,0,0,0,0,0,0},
-	{1,1,1,0,0,0,0,0,0,0},
-	{1,0,1,0,0,0,0,0,0,0},
-	{1,1,0,0,0,0,1,0,0,1},
-	{1,1,1,1,1,0,1,0,0,1},
-    {1,1,0,0,0,0,1,0,0,1},
-	{1,1,0,0,0,0,1,0,0,1},
-	{1,1,1,1,1,0,1,0,0,1},
-};
+	int i = x - X, j = y - Y;
 
-unsigned char sharpe[][4] =
-{
-	{0,0,0,0},
-	{1,1,1,0},
-	{0,0,1,0},
-	{0,0,0,0}
-};
+	if ((i > -1 && i < 4 && j > -1 && j < 4 && sharpe[i][j]) || background[x][y])
+		printf("■");
+	else
+		printf("　");
+}
 
-void background_show(void)
+void all_show(void)
 {
 	int i = 0, j = 0;
-	for (i = 0; i < 10; i++)
+	printf("x\\y ");
+	for (j = 0; j < 12; j++) printf("%d ", j);
+	printf("\n--------------------------------------\n");
+
+	for (i = 0; i < 19; i++)
 	{
-		for (j = 0; j < 10; j++)
+		printf(" %2d |", i);
+		for (j = 1; j < 11; j++)
 		{
-			printf("%d ", background[i][j]);
+			sharpe_show(i, j);
 		}
 		printf("\n");
 	}
 }
 
-void down(unsigned char x, unsigned char y)
-{
-	int i = 0;
-
-	for (i = 0; i < 4; i++)
-	{
-		if (background[x+4][y+i] + sharpe[3][i] > 1)
-		{
-			//不能再下
-		}
-	}
-
-
-}
-
-int flag = 0;
-void dispear(unsigned char x, unsigned char y)
+void mass(unsigned char x, unsigned char y)//将背景和图形混合
 {
 	int i = 0, j = 0;
-	int a = 0, b = 4;
-
-	for (i = y; i < 10; i++)
+	for (i = 0; i < 4; i++)
 	{
-		a = 0; b--;
-		for (j = x; j < x+4; j++)
+		for (j = 0; j < 4; j++)
 		{
-			if (sharpe[b][a] + background[i][j] > 1)
-			{
-				flag = 1;
-				break;
-			}
-			else if (sharpe[b][a] + background[i][j] == 1)
-			{
-
-			}
-			else
-			{
-				b = 3;
-			}
-			a++;
+			if (sharpe[i][j])
+				background[x + i][y + j] = 1;
 		}
-		
-		if (flag) break;
-		
-		
 	}
-
-	printf("a = %d, b = %d \n", a, b);
-	printf("i = %d, j = %d \n", i, j);
 }
 
-void compare(unsigned char x, unsigned char y)
+int Z = 0;
+
+int handle(void) //判断并消除符合条件的行
+{
+	int i = 0, j = 0, c = 0, k = 18;
+	unsigned char copy[20][15] = { 0 };
+
+	memcpy(copy, background_default, 300 * sizeof(copy[0][0]));
+	Z = 0;
+	for (i = 18; i > 0; i--)
+	{
+		c = 0;
+		for (j = 10; j > 0; j--)
+		{
+			if (background[i][j])
+				c++;
+			else break;
+		}
+		if (c == 10) {
+			Z++;
+			for (j = 1; j < 11; j++) background[i][j] = 0;
+			
+			all_show();
+			Sleep(100);
+			system("cls"); //清屏
+		}
+		else
+		{
+			for (j = 1; j < 11; j++) copy[k][j] = background[i][j];
+			k--;
+		}
+	}
+	
+	memcpy(background,copy,300*sizeof(copy[0][0]));
+
+	return 1;
+}
+
+int compare(unsigned char x, unsigned char y)
 {
 	int i = 0, j = 0, a = 0, b = 0;
 
-	for (i = x; i < x+4; i++, b=0, a++)
+	if (x > 16) return 0;//超出屏幕范围
+	if (y < 0 || y > 11) return 0;
+
+	for (i = x; i < x + 4; i++, b = 0, a++)
 	{
-		for (j = y; j < y + 4; j++)
+		for (j = y; j < y + 4; b++, j++)
 		{
-			if (sharpe[a][b] + background[i][j] < 2)
-			{
-				
-			}
-			else
-			{
-				printf("a = %d, b = %d \n", a, b);
-				printf("i = %d, j = %d \n", i, j);
-				return;
-			}
+			if (sharpe[a][b] + background[i][j] < 2);
+			else return  0;
 		}
 	}
+	return 1;
+}
+
+void timer_handle(void){  c = 'c'; }
+
+int r = 0, space = 0, count = 0;
+int sharpe_count[] = { 3,3,1,1,3,1,1 };
+int sharpe_sum[] = { 0,4,8,10,12,16,18 };
+void r_rand(void)//产生新图形
+{
+	srand(time(0));
+	r = rand() % 7;
+	space = 0;
+	memcpy(sharpe, figure[sharpe_sum[r] + space], 16 * sizeof(sharpe[0][0]));
+	X = 0; Y = 4;
+}
+
+void sharpe_change()
+{
+	space++;
+	if (space > sharpe_count[r]) space = 0;
+	memcpy(sharpe, figure[sharpe_sum[r] + space], 16 * sizeof(sharpe[0][0]));
 }
 
 int main(void)
 {
-	background_show();
-	//dispear(1,1);
+	timeSetEvent(700, 1, (LPTIMECALLBACK)timer_handle, (DWORD)1, TIME_PERIODIC);//定时器 - 1000ms
+	r_rand();
 
-	compare(0, 2);
+	while (1)
+	{
+		if (_kbhit()) //如果键盘被按下
+		{
+			c = _getch();//判断字符
+		}
 
+		if ((c == 'd')&&(Y<11)) Y++;
+		else if ((c == 'a')&&(Y>0)) Y--;
+		else if ((c == 's')&&(X<16)) X++;
+		else if ((c == 'c') && (X < 16))
+		{
+			count++;
+			if (count > 2) {count = 0; X++; } else continue;
+		}
+		else if (c == ' ')  sharpe_change();
+		//else if (c == 'w') X--;
+
+		if(c == 'd' || c == 'a' || c == 's' || c == 'c' || c == ' ') 
+		{
+			system("cls"); //清屏
+
+			if (compare(X, Y)) //图形可以嵌合背景
+			{
+				if (!compare(X + 1, Y))//图形的向下一步不可嵌合背景
+				{
+					if(c == 'c'||c == 's') //图形向下移动
+					{
+						mass(X, Y);
+						handle();
+						r_rand();//产生新的图形
+					}
+					else if (c == 'a' || c == 'd')
+					{ 
+						mass(X, Y);
+						r_rand();//新的图形
+					}
+				}
+			}
+			else//左右移动情况不能嵌合背景
+			{
+				if (c == 'd') { Y--; }
+				else if (c == 'a') { Y++; }
+				else if (c == 's') { X--; }
+				//else if (c == 'w') { X++; }
+			}
+			all_show();
+			c = 0;
+		}
+	}
 	return 0;
 }

@@ -15,14 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ConsoleApplication1.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="俄罗斯方块.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="data.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
