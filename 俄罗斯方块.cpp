@@ -208,7 +208,7 @@ int GameCycle(int N, int T, int F)
 }
 
 /**********MainÖ÷º¯Êý***********/
-int main3()
+int mainw()
 {
     system("color F0&mode con cols=35 lines=25");
     HideCursor();
