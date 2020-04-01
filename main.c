@@ -153,7 +153,7 @@ void sharpe_change()
 	}
 }
 
-int main(void)
+int main2(void)
 {
 	timeSetEvent(1000, 1, (LPTIMECALLBACK)timer_handle, (DWORD)1, TIME_PERIODIC);//¶¨Ê±Æ÷ - 1000ms
 	r_rand();
